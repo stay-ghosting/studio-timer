@@ -7,8 +7,10 @@ export default (props) => {
             {...props}
 
             style={{
-                paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+                paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+                backgroundColor: '#000000'
             }}>
+
             {props.children}
         </SafeAreaView>
     )
