@@ -2,6 +2,7 @@ import { View, Text, TextInput, Button, SafeAreaView, TouchableOpacity } from 'r
 import React, { useState } from 'react'
 import SelectTimeList from '../components/SelectTimeList'
 import AndroidSafeView from '../components/AndroidSafeView';
+import { updateSession } from '../slices/currentSessionSlice'
 
 const TimerSetupScreen = () => {
     const [hours, setHours] = useState(1);
@@ -64,13 +65,19 @@ const TimerSetupScreen = () => {
         }
 
         setErrorMessage(newErrorMessage.trim())
-        //priceNumber = Number(price);
 
+        // if invalid stop function
+        if (!isValid) {
+            return;
+        }
+
+        priceNumber = Number(price);
+        const totalSeconds = (hours * 3600) + (minutes * 60);
     }
 
     return (
 
-        <View className='flex-1 '>
+        <SafeAreaView style={AndroidSafeView.AndroidSafeArea} className='flex-1'>
             {/* title */}
             <Text className='text-4xl font-bold text-center pt-5'>Setup Timer</Text>
             <Text className='text-red-500 text-center h-16'>{errorMessage}</Text>
@@ -124,7 +131,7 @@ const TimerSetupScreen = () => {
                     <Text className='text-gray-100 py-5 text-center uppercase'>Start Timer</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </SafeAreaView>
     )
 }
 
