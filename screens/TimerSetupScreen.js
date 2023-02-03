@@ -2,9 +2,13 @@ import { View, Text, TextInput, Button, SafeAreaView, TouchableOpacity } from 'r
 import React, { useState } from 'react'
 import SelectTimeList from '../components/SelectTimeList'
 import AndroidSafeView from '../components/AndroidSafeView';
-import { updateSession } from '../slices/currentSessionSlice'
+import { useNavigation } from '@react-navigation/native';
+import { SecondsToHMS } from '../components/HMS';
 
 const TimerSetupScreen = () => {
+
+    const navigation = useNavigation();
+
     const [hours, setHours] = useState(1);
     const [minutes, setMinutes] = useState(0);
 
@@ -49,7 +53,6 @@ const TimerSetupScreen = () => {
         // re for string only containing letters and numbers
         const alphaNumeric = /^[\w\s]+$/;
 
-        console.log(alphaNumeric.test(name));
         // if name not entered
         if (name === '') {
             // show error message
@@ -70,9 +73,20 @@ const TimerSetupScreen = () => {
         if (!isValid) {
             return;
         }
-
-        priceNumber = Number(price);
+        // convert to number
+        const priceNumber = Number(price);
+        // calculate interval seconds
         const totalSeconds = (hours * 3600) + (minutes * 60);
+        // convert interval to HMS format
+        const hms = SecondsToHMS(totalSeconds);
+        // details to pass to the timerScreen
+        sessionDetails = {
+            sessionName: name,
+            pricePerInterval: priceNumber,
+            intervalHMS: hms,
+        }
+        // navigate
+        navigation.navigate('timerScreen', sessionDetails)
     }
 
     return (

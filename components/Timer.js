@@ -1,20 +1,8 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import React, { useState, useEffect, useRef } from 'react'
-import { setElapsedHMS, selectHMS } from '../slices/timeElapsedSlice'
-import { useDispatch, useSelector } from 'react-redux'
-
-const secondsToHMS = (seconds) => {
-    // create date instance 
-    const date = new Date(null);
-    // specify seconds
-    date.setSeconds(seconds);
-    // get the hms values
-    const h = Number(date.toISOString().slice(11, 13));
-    const m = Number(date.toISOString().slice(14, 16));
-    const s = Number(date.toISOString().slice(17, 19));
-    // return the hms values
-    return { h, m, s, }
-}
+import { View, Text, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { setElapsedHMS, selectHMS } from '../slices/timeElapsedSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { SecondsToHMS } from './HMS';
 
 const Timer = (props) => {
     props.resume.current = () => resumeTimer();
@@ -27,7 +15,7 @@ const Timer = (props) => {
     const [isPaused, setIsPaused] = useState(false);
     const [isRunning, setIsRunning] = useState(false);
     const [seconds, setSeconds] = useState(0);
-    const hms = secondsToHMS(seconds);
+    const hms = SecondsToHMS(seconds);
 
     const pauseTimer = () => {
         setIsPaused(true);
@@ -61,7 +49,7 @@ const Timer = (props) => {
 
     // update redux state
     useEffect(() => {
-        dispatch(setElapsedHMS(secondsToHMS(seconds)));
+        dispatch(setElapsedHMS(SecondsToHMS(seconds)));
     }, [seconds])
 }
 

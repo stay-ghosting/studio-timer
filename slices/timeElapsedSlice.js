@@ -15,7 +15,6 @@ export const timeElapsedSlice = createSlice({
     initialState,
     reducers: {
         setElapsedHMS: (state, action) => {
-            // console.log(action.payload);
             state.hms = action.payload;
         },
     },
