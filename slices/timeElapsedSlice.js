@@ -1,36 +1,29 @@
-import { createSlice } from '@reduxjs/toolkit'
-
 // const time = new Date(s * 1000).toISOString().slice(11, 19);
+import { createSlice } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
+// dispatch(timeElapsedSlice.actions.setTimer(seconds));
 
+const initialState = {
+    hms: {
+        h: 0,
+        m: 0,
+        s: 0,
+    }
+};
 export const timeElapsedSlice = createSlice({
     name: 'timeElapsed',
-    initialState: {
-        interval: null,
-        seconds: 0
-    },
+    initialState,
     reducers: {
-        startTimer: (state) => {
-            state.interval = setInterval(
-                () => state.seconds++,
-                1000);
+        setElapsedHMS: (state, action) => {
+            // console.log(action.payload);
+            state.hms = action.payload;
         },
-
-        pauseTimer: (state) => {
-            if (interval !== null) {
-                clearInterval(state.interval);
-            }
-        },
-
-        resetTimer: (state) => {
-            pauseTimer();
-            state.seconds = 0
-        },
-    }
+    },
 })
 
-// Action creators are generated for each case reducer function
-export const { startTimer, pauseTimer, resetTimer } = timeElapsedSlice.actions
 
-export const selectSeconds = (state) => state.timeElapsed.seconds;
+export const selectHMS = (state) => state.timeElapsed.hms;
 
-export default timeElapsedSlice.reducer
+export const { setElapsedHMS } = timeElapsedSlice.actions;
+
+export default timeElapsedSlice.reducer;

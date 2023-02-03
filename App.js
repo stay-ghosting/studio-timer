@@ -6,7 +6,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TimerScreen from './screens/TimerScreen';
 import { Provider } from 'react-redux';
-import { store } from './store'
+import store from './store'
+//git push -u origin master
 
 export default function App() {
 
@@ -14,11 +15,11 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName='timerScreen' screenOptions={{ headerShown: false }}>
           <Stack.Screen name='timerSetupScreen' component={TimerSetupScreen} />
           <Stack.Screen name='timerScreen' component={TimerScreen} />
         </Stack.Navigator>
       </NavigationContainer>
-    // </Provider>
+    </Provider>
   );
 }

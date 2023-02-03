@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 export const sessionsSlice = createSlice({
-    name: 'sessions',
     initialState: {
         sessions: [],
     },
+    name: 'sessions',
     reducers: {
         addSession: (state, action) => {
             const newSession = action.payload
@@ -24,6 +24,6 @@ export const sessionsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { addSession } = sessionsSlice.actions
+export const { addSession } = sessionsSlice.actions;
 
 export default sessionsSlice.reducer
