@@ -85,6 +85,7 @@ const TimerSetupScreen = () => {
             sessionName: name,
             pricePerInterval: priceNumber,
             intervalHMS: hms,
+            isSetUp: true,
         }
         // navigate
         navigation.navigate('timerScreen', sessionDetails)

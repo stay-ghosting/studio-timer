@@ -4,18 +4,20 @@ import AndroidSafeView from '../components/AndroidSafeView';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HMSToSeconds, SecondsToHMS } from '../components/HMS';
 import { PauseIcon, PlayIcon, CheckIcon } from "react-native-heroicons/solid";
+import { useNavigation } from '@react-navigation/native';
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 
 const TimerScreen = ({ route }) => {
-    const { pricePerInterval, intervalHMS, sessionName } = route.params;
+    const { pricePerInterval, intervalHMS, sessionName, isSetUp } = route.params;
 
+    const navigation = useNavigation();
 
-    const [isPaused, setIsPaused] = useState(false);
+    const [isPaused, setIsPaused] = useState(true);
     const [isRunning, setIsRunning] = useState(false);
     const [seconds, setSeconds] = useState(0);
     const timeElapsedHMS = SecondsToHMS(seconds);
-
-    const [isSetUp, setIsSetUp] = useState(false);
 
     // seconds passed / seconds in an interval
     const intervalsPassed = Math.floor(HMSToSeconds(timeElapsedHMS) / HMSToSeconds(intervalHMS));
@@ -35,25 +37,31 @@ const TimerScreen = ({ route }) => {
     }
 
     useEffect(() => {
-        // if paused
-        if (isPaused) {
-            setIsRunning(() => false);
-            // clear interval
-            if (interval !== undefined) {
-                clearInterval(interval)
-            }
-            // if active
-        } else {
-            if (!isRunning) {
-                setIsRunning(() => true);
-                // set interval
-                interval = setInterval(() => {
-                    setSeconds(seconds => seconds + 1);
-                }, 1000);
+        if (isSetUp) {
+            // if paused
+            if (isPaused) {
+                setIsRunning(() => false);
+                // clear interval
+                try {
+                    clearInterval(interval)
+                } catch (err) { }
+                // if active
+            } else {
+                if (!isRunning) {
+                    setIsRunning(() => true);
+                    // set interval
+                    interval = setInterval(() => {
+                        setSeconds(seconds => seconds + 1);
+                    }, 1000);
+                }
             }
         }
         // on unmount clear interval
-        return () => clearInterval(interval);
+        return () => {
+            try {
+                clearInterval(interval)
+            } catch (err) { }
+        };
     }, [isPaused]);
 
 
@@ -62,20 +70,28 @@ const TimerScreen = ({ route }) => {
     return (
         <SafeAreaView style={AndroidSafeView.AndroidSafeArea} className='flex-1 px-5 items-center'>
             <View className='flex-1' />
+            <CircularProgressbar value={1} maxValue={1} text='1' />;
             <View className='justify-center items-center'>
-                {/* time */}
-                <Text className='text-6xl font-bold pb-4'>
-                    {`${timeElapsedHMS.h.toString().padStart(2, '0')}:${timeElapsedHMS.m.toString().padStart(2, '0')}:${timeElapsedHMS.s.toString().padStart(2, '0')}`}
-                </Text>
                 {/* session name */}
                 <Text className='text-3xl text-gray-800'>
                     {sessionName}
                 </Text>
-                {/* details */}
-                <Text className='text-lg'>current price - £{currentPrice}</Text>
-                <Text>£{pricePerInterval}/{intervalHMS.h}h{intervalHMS.m}m</Text>
+                {/* time */}
+                <Text className='text-6xl text-red-500 font-bold py-4'>
+                    {`${timeElapsedHMS.h.toString().padStart(2, '0')}:${timeElapsedHMS.m.toString().padStart(2, '0')}:${timeElapsedHMS.s.toString().padStart(2, '0')}`}
+                </Text>
             </View>
-            <View className='flex-1 justify-end'>
+            <View className='flex-1 justify-between'>
+                <View>
+                    {isSetUp ?
+                        <View className='items-center'>
+                            {/* details */}
+                            <Text className='text-lg'>current price - £{currentPrice}</Text>
+                            <Text>£{pricePerInterval}/{intervalHMS.h}h{intervalHMS.m}m</Text>
+                        </ View> :
+                        <Text>Please set up Timer</Text>
+                    }
+                </View>
                 <View className='flex-row justify-center space-x-2'>
                     {isSetUp ?
                         <>
@@ -97,7 +113,7 @@ const TimerScreen = ({ route }) => {
                         <>
                             <TouchableOpacity
                                 className='px-6 py-2 bg-black mb-10 h-14 align-middle justify-center'
-                                onPress={() => { }}>
+                                onPress={() => { navigation.navigate('timerSetupScreen') }}>
                                 <Text className='text-white text-lg'>Set Up</Text>
                             </TouchableOpacity>
                         </>}
