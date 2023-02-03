@@ -78,6 +78,7 @@ const TimerSetupScreen = () => {
         // calculate interval seconds
         const totalSeconds = (hours * 3600) + (minutes * 60);
         // convert interval to HMS format
+        console.log(totalSeconds);
         const hms = SecondsToHMS(totalSeconds);
         // details to pass to the timerScreen
         sessionDetails = {
