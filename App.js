@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TimerScreen from './screens/TimerScreen';
 import { SecondsToHMS } from './components/HMS';
+import MenuScreen from './screens/MenuScreen';
 //git push -u origin master
 
 export default function App() {
@@ -10,7 +11,7 @@ export default function App() {
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='timerScreen' screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName='menuScreen' screenOptions={{ headerShown: false }}>
         <Stack.Screen
           name='timerSetupScreen'
           component={TimerSetupScreen}
@@ -22,8 +23,10 @@ export default function App() {
             sessionName: "",
             pricePerInterval: 0,
             intervalHMS: SecondsToHMS(0),
-            isSetUp: false,
           }} />
+        <Stack.Screen
+          name='menuScreen'
+          component={MenuScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

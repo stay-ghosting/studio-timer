@@ -1,16 +1,15 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, Alert } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import AndroidSafeView from '../components/AndroidSafeView';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HMSToSeconds, SecondsToHMS } from '../components/HMS';
 import { PauseIcon, PlayIcon, CheckIcon } from "react-native-heroicons/solid";
 import { useNavigation } from '@react-navigation/native';
-import { CircularProgressbar } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
+import * as Progress from 'react-native-progress';
 
 
 const TimerScreen = ({ route }) => {
-    const { pricePerInterval, intervalHMS, sessionName, isSetUp } = route.params;
+    const { pricePerInterval, intervalHMS, sessionName } = route.params;
 
     const navigation = useNavigation();
 
@@ -19,10 +18,18 @@ const TimerScreen = ({ route }) => {
     const [seconds, setSeconds] = useState(0);
     const timeElapsedHMS = SecondsToHMS(seconds);
 
+
     // seconds passed / seconds in an interval
     const intervalsPassed = Math.floor(HMSToSeconds(timeElapsedHMS) / HMSToSeconds(intervalHMS));
 
     const currentPrice = intervalsPassed * pricePerInterval;
+
+    const progressToInteraval = (seconds - (intervalsPassed * HMSToSeconds(intervalHMS))) / HMSToSeconds(intervalHMS)
+
+    const isSetUp = pricePerInterval !== 0 &&
+        /^[\w\s]+$/.test(sessionName) &&
+        (intervalHMS.h || intervalHMS.m);
+
 
     const pauseTimer = () => {
         setIsPaused(true);
@@ -64,60 +71,81 @@ const TimerScreen = ({ route }) => {
         };
     }, [isPaused]);
 
+    const showConfirmFinish = () => {
+        const details = {
+            timeElapsedHMS: timeElapsedHMS,
+            currentPrice: currentPrice,
+        }
+
+        return Alert.alert(
+            "Confirm Finish Timer",
+            `
+Details:
+time elapsed: ${timeElapsedHMS.h.toString().padStart(2, '0')}:${timeElapsedHMS.m.toString().padStart(2, '0')}:${timeElapsedHMS.s.toString().padStart(2, '0')}
+current price: £${currentPrice}
+
+Are you sure you want to end the timer?`,
+            [
+                {
+                    text: "Yes",
+                    onPress: () => {
+
+                    },
+                },
+                {
+                    text: "No",
+                },
+            ]
+        );
+    };
 
 
 
     return (
         <SafeAreaView style={AndroidSafeView.AndroidSafeArea} className='flex-1 px-5 items-center'>
-            <View className='flex-1' />
-            <CircularProgressbar value={1} maxValue={1} text='1' />;
-            <View className='justify-center items-center'>
+            <View className='flex-1 items-center' >
                 {/* session name */}
-                <Text className='text-3xl text-gray-800'>
-                    {sessionName}
-                </Text>
-                {/* time */}
-                <Text className='text-6xl text-red-500 font-bold py-4'>
-                    {`${timeElapsedHMS.h.toString().padStart(2, '0')}:${timeElapsedHMS.m.toString().padStart(2, '0')}:${timeElapsedHMS.s.toString().padStart(2, '0')}`}
-                </Text>
+                {isSetUp &&
+                    <>
+                        <Text className='text-3xl text-black pt-24'>Studio Timer</Text>
+                    </>
+                }
             </View>
-            <View className='flex-1 justify-between'>
-                <View>
-                    {isSetUp ?
-                        <View className='items-center'>
-                            {/* details */}
-                            <Text className='text-lg'>current price - £{currentPrice}</Text>
-                            <Text>£{pricePerInterval}/{intervalHMS.h}h{intervalHMS.m}m</Text>
-                        </ View> :
-                        <Text>Please set up Timer</Text>
+            <View className='justify-center items-center'>
+
+                <TouchableOpacity
+                    className='py-4 items-center'
+                    onPress={() => {
+                        if (isSetUp) {
+                            setIsPaused(!isPaused)
+                        } else {
+                            navigation.navigate('timerSetupScreen')
+                        }
+                    }}>
+                    {isSetUp && <Text className='pb-4 text-lg'>Current Price £{currentPrice}</Text>}
+                    {/* time */}
+                    <Text className='text-6xl text-red-500 font-bold '>
+                        {`${timeElapsedHMS.h.toString().padStart(2, '0')}:${timeElapsedHMS.m.toString().padStart(2, '0')}:${timeElapsedHMS.s.toString().padStart(2, '0')}`}
+                    </Text>
+                    {/* progress bar */}
+                    {isSetUp && <Progress.Bar progress={progressToInteraval} width={200} color='#EF4444' />}
+                    {
+                        isSetUp ?
+                            <Text>tap to {isPaused ? 'resume' : 'pause'}</Text> :
+                            <Text>tap to set up timer</Text>
                     }
-                </View>
-                <View className='flex-row justify-center space-x-2'>
-                    {isSetUp ?
-                        <>
-                            {/* play / pause button */}
-                            <TouchableOpacity
-                                className='px-4 py-2 bg-black mb-10  w-14 h-14 align-middle justify-center'
-                                onPress={toggleTime}>
-                                {/* <PauseIcon></PauseIcon> */}
-                                {isPaused ? <PlayIcon color='#ffffff' size={30} /> : <PauseIcon color='#ffffff' size={30} />}
-                            </TouchableOpacity>
-                            {/* done button */}
-                            <TouchableOpacity
-                                className='px-4 py-2 bg-black mb-10  w-14 h-14 align-middle justify-center'
-                                onPress={() => { }}>
-                                {/* <PauseIcon></PauseIcon> */}
-                                {<CheckIcon color='#ffffff' size={30} />}
-                            </TouchableOpacity>
-                        </> :
-                        <>
-                            <TouchableOpacity
-                                className='px-6 py-2 bg-black mb-10 h-14 align-middle justify-center'
-                                onPress={() => { navigation.navigate('timerSetupScreen') }}>
-                                <Text className='text-white text-lg'>Set Up</Text>
-                            </TouchableOpacity>
-                        </>}
-                </View>
+                </TouchableOpacity>
+            </View>
+            <View className='flex-1 justify-end'>
+                {isSetUp &&
+                    <>
+                        {/* done button */}
+                        <TouchableOpacity
+                            className='px-4 py-2 mb-10 bg-red-500 align-middle justify-center'
+                            onPress={() => { showConfirmFinish() }}>
+                            <Text className='text-white'>Done</Text>
+                        </TouchableOpacity>
+                    </>}
             </View>
         </SafeAreaView >
 
