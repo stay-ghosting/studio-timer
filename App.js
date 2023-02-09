@@ -5,6 +5,8 @@ import TimerScreen from './screens/TimerScreen';
 import { SecondsToHMS } from './components/HMS';
 import MenuScreen from './screens/MenuScreen';
 //git push -u origin master
+// handle if ran for 0 seconds
+// change to switch navigator
 
 export default function App() {
 
@@ -12,10 +14,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName='menuScreen' screenOptions={{ headerShown: false }}>
-        <Stack.Screen
+        {/* <Stack.Screen
           name='timerSetupScreen'
           component={TimerSetupScreen}
-          options={{ presentation: 'modal', headerShown: false }} />
+          options={{ presentation: 'modal', headerShown: false }} /> */}
         <Stack.Screen
           name='timerScreen'
           component={TimerScreen}

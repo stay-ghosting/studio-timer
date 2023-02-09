@@ -1,9 +1,10 @@
-import { View, Text, TextInput, Button, SafeAreaView, TouchableOpacity } from 'react-native'
+import { View, Text, TextInput, SafeAreaView, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import SelectTimeList from '../components/SelectTimeList'
 import AndroidSafeView from '../components/AndroidSafeView';
 import { useNavigation } from '@react-navigation/native';
 import { SecondsToHMS } from '../components/HMS';
+import Input from '../components/Input'
 
 const TimerSetupScreen = () => {
 
@@ -94,12 +95,17 @@ const TimerSetupScreen = () => {
 
         <SafeAreaView style={AndroidSafeView.AndroidSafeArea} className='flex-1'>
             {/* title */}
-            <Text className='text-4xl font-bold text-center pt-5'>Setup Timer</Text>
+            <Text className='text-4xl text-center pt-5'>New Timer</Text>
             <Text className='text-red-500 text-center h-16'>{errorMessage}</Text>
 
             <View className='pt-16 flex-1'>
                 {/* form */}
                 <View className='px-14'>
+                    <Input
+                        label='Session Name'
+                        placeholder='Enter a name for your session'
+                        iconName='file-document-edit-outline'
+                        error='enter eamil' />
                     {/* name field */}
                     <Text>Name</Text>
                     <TextInput
@@ -145,6 +151,7 @@ const TimerSetupScreen = () => {
                 <TouchableOpacity onPress={validateInput} className='bg-black w-52 rounded-xl'>
                     <Text className='text-gray-100 py-5 text-center uppercase'>Start Timer</Text>
                 </TouchableOpacity>
+
             </View>
         </SafeAreaView>
     )
