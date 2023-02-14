@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Alert, AsyncStorage } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import AndroidSafeView from '../components/AndroidSafeView';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HMSToSeconds, SecondsToHMS } from '../components/HMS';
@@ -7,13 +7,15 @@ import { PauseIcon, PlayIcon, CheckIcon } from "react-native-heroicons/solid";
 import { useNavigation } from '@react-navigation/native';
 import * as Progress from 'react-native-progress';
 import Button from '../components/Button';
-import { getData, storeData } from '../components/localStorage';
+import { addSessionLocal, getData, storeData } from '../components/localStorage';
+import { SessionsContext } from '../context/SessionsContext';
 
 const TimerScreen = ({ route }) => {
     const { pricePerInterval, intervalHMS, sessionName } = route.params;
 
     const navigation = useNavigation();
 
+    const { sessions, setSessions } = useContext(SessionsContext);
     const [hasBeenRan, setHasBeenRan] = useState(false);
     const [startDate, setStartDate] = useState(null);
     const [isPaused, setIsPaused] = useState(true);
@@ -74,6 +76,7 @@ const TimerScreen = ({ route }) => {
         };
     }, [isPaused]);
 
+
     useEffect(() => {
         if (seconds > 0) {
             if (!hasBeenRan) {
@@ -90,36 +93,42 @@ const TimerScreen = ({ route }) => {
             currentPrice: currentPrice,
         }
 
+        const endDate = new Date().toJSON();
+        const session = {
+            startDate: startDate,
+            endDate: endDate,
+            title: sessionName,
+            secondsElapsed: seconds,
+            secondsInterval: HMSToSeconds(intervalHMS),
+            totalPrice: currentPrice,
+            pricePerInterval: pricePerInterval,
+            notes: "",
+        };
 
         const onPress = async () => {
-            const endDate = new Date().toJSON();
+            // var allSessionsJSON;
+            // await getData('sessions').then(
+            //     (value) => { allSessionsJSON = value },
+            //     (err) => { allSessionsJSON = null }
+            // );
+            // // if no value in there
+            // if (allSessionsJSON === null) {
+            //     allSessionsJSON = '[]';
+            // }
+            // // add this session
+            // const allSessions = JSON.parse(allSessionsJSON);
+            // allSessions.push(session);
 
-            const session = {
-                startDate: startDate,
-                endDate: endDate,
-                title: "my timer",
-                secondsElapsed: 4500,
-                secondsInterval: 1000,
-                totalPrice: 40,
-                pricePerInterval: 10,
-                notes: "",
-            };
+            // // convert to JSON
+            // const newAllSessionsJSON = JSON.stringify(allSessions);
+            // console.log(newAllSessionsJSON);
+            // // store data
+            // storeData('sessions', newAllSessionsJSON);
 
-            const allSessionsJSON = await getData('sessions');
-            // if no value in there
-            if (allSessionsJSON === null) {
-                allSessionsJSON = '[]';
-            }
-            // add this session
-            const allSessions = JSON.parse(allSessionsJSON);
-            allSessions.push(session);
+            const newSessions = { ...sessions, session };
 
-            // convert to JSON
-            const newAllSessionsJSON = JSON.stringify(allSessions);
-            console.log(newAllSessionsJSON);
-            // store data
-            storeData('sessions', newAllSessionsJSON);
-
+            setSessions(newSessions);
+            addSessionLocal(session);
 
             navigation.navigate('menuScreen');
         }
@@ -137,7 +146,7 @@ Are you sure you want to end the timer?`,
             [
                 {
                     text: "Yes",
-                    onPress,
+                    onPress: () => onPress(),
                 },
                 {
                     text: "No",

@@ -7,7 +7,8 @@ import MenuScreen from './screens/MenuScreen';
 //git push -u origin master
 // handle if ran for 0 seconds
 // change to switch navigator
-
+// create get set for context linked to loca storage
+// give the option to reset data if not working in local storage
 export default function App() {
 
   const Stack = createNativeStackNavigator();
