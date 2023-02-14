@@ -1,22 +1,21 @@
-import { View, Text, TouchableOpacity, Alert, AsyncStorage } from 'react-native'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import { View, Text, TouchableOpacity, Alert } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import AndroidSafeView from '../components/AndroidSafeView';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HMSToSeconds, SecondsToHMS } from '../components/HMS';
-import { PauseIcon, PlayIcon, CheckIcon } from "react-native-heroicons/solid";
 import { useNavigation } from '@react-navigation/native';
 import * as Progress from 'react-native-progress';
 import Button from '../components/Button';
-import { addSessionLocal, getData, storeData } from '../components/localStorage';
-import { SessionsContext } from '../context/SessionsContext';
+import { useSessions } from '../components/SessionsProvider';
 
 const TimerScreen = ({ route }) => {
     const { pricePerInterval, intervalHMS, sessionName } = route.params;
 
     const navigation = useNavigation();
 
-    const { sessions, setSessions } = useContext(SessionsContext);
+    const [sessions, addSession, resetSessions] = useSessions();
     const [hasBeenRan, setHasBeenRan] = useState(false);
+    const [startTime, setStartTime] = useState(null);
     const [startDate, setStartDate] = useState(null);
     const [isPaused, setIsPaused] = useState(true);
     const [isRunning, setIsRunning] = useState(false);
@@ -47,6 +46,10 @@ const TimerScreen = ({ route }) => {
     const toggleTime = () => {
         setIsPaused(!isPaused)
     }
+
+    useEffect(() => {
+        setStartDate(new Date().toJSON())
+    }, [])
 
     useEffect(() => {
         if (isSetUp) {
@@ -80,23 +83,24 @@ const TimerScreen = ({ route }) => {
     useEffect(() => {
         if (seconds > 0) {
             if (!hasBeenRan) {
-                setStartDate(new Date().toJSON())
+                setStartTime(new Date().toJSON())
                 setHasBeenRan(true);
             }
         }
     }, [seconds])
 
 
-    const showConfirmFinish = async () => {
+    const showConfirmFinish = () => {
         const details = {
             timeElapsedHMS: timeElapsedHMS,
             currentPrice: currentPrice,
         }
 
-        const endDate = new Date().toJSON();
+        const endTime = new Date().toJSON();
         const session = {
             startDate: startDate,
-            endDate: endDate,
+            startTime: startTime,
+            endTime: endTime,
             title: sessionName,
             secondsElapsed: seconds,
             secondsInterval: HMSToSeconds(intervalHMS),
@@ -105,31 +109,8 @@ const TimerScreen = ({ route }) => {
             notes: "",
         };
 
-        const onPress = async () => {
-            // var allSessionsJSON;
-            // await getData('sessions').then(
-            //     (value) => { allSessionsJSON = value },
-            //     (err) => { allSessionsJSON = null }
-            // );
-            // // if no value in there
-            // if (allSessionsJSON === null) {
-            //     allSessionsJSON = '[]';
-            // }
-            // // add this session
-            // const allSessions = JSON.parse(allSessionsJSON);
-            // allSessions.push(session);
-
-            // // convert to JSON
-            // const newAllSessionsJSON = JSON.stringify(allSessions);
-            // console.log(newAllSessionsJSON);
-            // // store data
-            // storeData('sessions', newAllSessionsJSON);
-
-            const newSessions = { ...sessions, session };
-
-            setSessions(newSessions);
-            addSessionLocal(session);
-
+        const onPress = () => {
+            addSession(session);
             navigation.navigate('menuScreen');
         }
 

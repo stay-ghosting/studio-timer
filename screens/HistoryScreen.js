@@ -1,20 +1,14 @@
-import { View, Text } from 'react-native'
-import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
+import { Text } from 'react-native'
+import React, { useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SessionsContext } from '../context/SessionsContext';
+import { useSessions } from '../components/SessionsProvider';
 
 const HistoryScreen = () => {
-    const [sessions, setSessions] = useState(useContext(SessionsContext));
-
-    // const setData = async () => {
-    //     const sessionJSON = await getData("sessions");
-    //     const sessionsObj = JSON.parse(sessionJSON);
-    //     setSessions(sessionsObj)
-    // }
+    const [sessions, addSession, resetSessions] = useSessions();
 
     useEffect(() => {
-        console.log(sessions);
-    }, [])
+        console.log("history loading: " + sessions);
+    }, [sessions])
 
     return (
         <SafeAreaView>
