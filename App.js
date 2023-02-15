@@ -1,11 +1,9 @@
-import TimerSetupScreen from './screens/TimerSetupScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TimerScreen from './screens/TimerScreen';
 import { SecondsToHMS } from './components/HMS';
 import MenuScreen from './screens/MenuScreen';
 import { SessionsProvider } from './components/SessionsProvider';
-import { useEffect } from 'react';
 //git push -u origin master
 // handle if ran for 0 seconds
 // change to switch navigator
