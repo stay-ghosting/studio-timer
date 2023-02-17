@@ -11,6 +11,22 @@ export const SecondsToHMS = (seconds) => {
     return { h, m, s, }
 }
 
+export const HMSFormatted = (hms) => {
+    // console.log('hms' + JSON.stringify(hms));
+    const h = hms.h ? hms.h.toString() + 'h' : '';
+    const m = hms.m ? ' ' + hms.m.toString() + 'm' : '';
+    const s = hms.s ? ' ' + hms.s.toString() + 's' : '';
+    console.log(h + m + s);
+    // if time is 0
+    if (h + m + s === '') {
+        return '0s'
+    }
+
+    return `${h}${m}${s}`
+
+}
+
+
 export const HMSToSeconds = (hms) => {
     // get total seconds by ...
     // adding seconds in an hour * amount of hours
