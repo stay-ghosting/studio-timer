@@ -7,6 +7,8 @@ import { useNavigation } from '@react-navigation/native';
 import * as Progress from 'react-native-progress';
 import Button from '../components/Button';
 import { useSessions } from '../components/SessionsProvider';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
 
 const TimerScreen = ({ route }) => {
     const { pricePerInterval, intervalHMS, sessionName } = route.params;
@@ -55,6 +57,8 @@ const TimerScreen = ({ route }) => {
         navigation.addListener('beforeRemove', (e) => {
             // Prevent leaving the screen
             e.preventDefault();
+            // ask if sure
+            showConfirmCancel();
         })
     }, [navigation]);
 
@@ -96,12 +100,32 @@ const TimerScreen = ({ route }) => {
         }
     }, [seconds])
 
+    const showConfirmCancel = () => {
+
+        const confirm = () => {
+            navigation.navigate('NewTimer');
+        }
+
+        return Alert.alert(
+            "Confirm stop Timer",
+            `
+Are you sure you want to end the timer?
+All progress will be lost!`,
+
+
+            [
+                {
+                    text: "No",
+                },
+                {
+                    text: "Yes",
+                    onPress: () => confirm(),
+                },
+            ]
+        );
+    }
 
     const showConfirmFinish = () => {
-        // const details = {
-        //     timeElapsedHMS: timeElapsedHMS,
-        //     currentPrice: currentPrice,
-        // }
 
         const endTime = new Date().toJSON();
 
@@ -115,15 +139,17 @@ const TimerScreen = ({ route }) => {
             totalPrice: currentPrice,
             pricePerInterval: pricePerInterval,
             notes: "",
+            fromTimer: true,
         };
 
-        const onPress = () => {
-
+        const confirm = () => {
             addSession(session);
             navigation.navigate('timerInfoScreen', session);
 
             // navigation.navigate('menuScreen');
         }
+
+
 
         return Alert.alert(
             "Confirm Finish Timer",
@@ -137,11 +163,11 @@ Are you sure you want to end the timer?`,
 
             [
                 {
-                    text: "Yes",
-                    onPress: () => onPress(),
+                    text: "No",
                 },
                 {
-                    text: "No",
+                    text: "Yes",
+                    onPress: () => confirm(),
                 },
             ]
         );
@@ -155,7 +181,17 @@ Are you sure you want to end the timer?`,
                 {/* session name */}
                 {isSetUp &&
                     <>
-                        <Text className='text-3xl text-black pt-24'>Studio Timer</Text>
+                        <View className='flex-row items-center'>
+                            <TouchableOpacity
+                                activeOpacity={0.8}
+                                onPress={showConfirmCancel}
+                                className='flex-1 justify-center'>
+                                <AntDesign name='left' size={25} />
+                            </TouchableOpacity>
+                            <Text className='text-4xl text-center py-5'>Studio Timer</Text>
+                            <View className='flex-1' />
+                        </View>
+                        <Text className='pb-4 text-lg text-slate-600'>{sessionName}</Text>
                     </>
                 }
             </View>
@@ -180,20 +216,24 @@ Are you sure you want to end the timer?`,
                     {isSetUp && <Progress.Bar progress={progressToInteraval} width={200} color='#8B5CF6' />}
                     {
                         isSetUp ?
-                            <Text>tap to {isPaused ? 'resume' : 'pause'}</Text> :
+                            <Text>tap to {isPaused ? (hasBeenRan ? 'resume' : 'start') : ('pause')}</Text> :
                             <Text>tap to set up timer</Text>
                     }
                 </TouchableOpacity>
             </View>
             <View className='flex-1 justify-end'>
                 {isSetUp &&
-                    <>
+                    <View className='flex-row space-x-2'>
                         {/* done button */}
+                        {/* <Button
+                            title='Exit timer'
+                            className='px-4 py-2 mb-10'
+                            onPress={() => { showConfirmCancel() }} /> */}
                         <Button
-                            title='Done'
+                            title='Finish Session'
                             className='px-4 py-2 mb-10'
                             onPress={() => { showConfirmFinish() }} />
-                    </>}
+                    </View>}
             </View>
         </SafeAreaView >
 

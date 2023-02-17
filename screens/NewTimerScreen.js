@@ -86,7 +86,6 @@ const NewTimerScreen = () => {
                 s: 0,
             },
         }
-
         navigation.navigate('timerScreen', sessionDetails)
     };
 

@@ -1,14 +1,14 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import Hr from '../components/hr';
+import Hr from '../components/Hr';
 import { HMSFormatted, SecondsToHMS } from '../components/HMS';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 
 
 const TimerInfoScreen = ({ route }) => {
-    const {
+    let {
         startDate,
         startTime,
         endTime,
@@ -18,30 +18,45 @@ const TimerInfoScreen = ({ route }) => {
         totalPrice,
         pricePerInterval,
         notes,
+        fromTimer,
     } = route.params;
+
+    startDate = new Date(startDate);
+    startTime = startTime ? new Date(startTime) : null;
+    endTime = new Date(endTime);
+
+
     console.log('timer screen: ' + JSON.stringify(route.params))
 
     const navigation = useNavigation();
 
     const dateFormated = (date) =>
-        date.toString().split('T')[0].split('-').slice(0, 3).join('/');
+        JSON.stringify(date).replace('"', '').split('T')[0].split('-').slice(0, 3).join('/');
 
     const timeFormated = (date) =>
-        date.toString().split('T')[1].split('.')[0].split(':').slice(0, 3).join(':');
+        JSON.stringify(date).split('T')[1].split('.')[0].split(':').slice(0, 3).join(':');
 
     // checks if timer started
     const secondsPaused = startTime ?
-        (Math.abs(endTime - startTime) / 1000) - secondsElapsed :
+        (Math.abs(endTime.getTime() - startTime.getTime()) / 1000) - secondsElapsed :
         0;
 
     const intervalsPassed = Math.floor(secondsElapsed / secondsInterval);
+
 
     return (
         <SafeAreaView className='px-4'>
             <View className='flex-row items-center'>
                 <TouchableOpacity
                     activeOpacity={0.8}
-                    onPress={() => navigation.navigate('History')}
+                    onPress={() => {
+                        if (fromTimer) {
+                            navigation.navigate('NewTimer')
+                        } else {
+                            navigation.navigate('History')
+
+                        }
+                    }}
                     className='flex-1'>
                     <AntDesign name='left' size={25} />
                 </TouchableOpacity>
@@ -65,7 +80,7 @@ const TimerInfoScreen = ({ route }) => {
             <Hr />
             <Text />
             <ListInfo title='time elapsed' info={HMSFormatted(SecondsToHMS(secondsElapsed))} />
-            <ListInfo title='time paused' info={HMSFormatted(SecondsToHMS((secondsPaused)))} />
+            <ListInfo title='time paused' info={HMSFormatted(SecondsToHMS(secondsPaused))} />
             <Text />
             <Hr />
             <Text />
