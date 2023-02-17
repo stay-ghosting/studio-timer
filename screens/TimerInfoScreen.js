@@ -1,9 +1,10 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, Share, Platform } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Hr from '../components/Hr';
 import { HMSFormatted, SecondsToHMS } from '../components/HMS';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 
 
@@ -36,6 +37,45 @@ const TimerInfoScreen = ({ route }) => {
     const timeFormated = (date) =>
         JSON.stringify(date).split('T')[1].split('.')[0].split(':').slice(0, 3).join(':');
 
+    const shareSession = async () => {
+        try {
+            const result = await Share.share({
+                title: title,
+                message:
+                    `Session Name - ${title}
+
+setup date - ${dateFormated(startDate)}
+setup time - ${timeFormated(startDate)}
+
+timer start date - ${(startTime) ? dateFormated(startTime) : 'not started'}
+timer start time - ${(startTime) ? timeFormated(startTime) : 'not started'}
+
+timer end date - ${(endTime) ? dateFormated(endTime) : 'N/A'}
+timer end time - ${(endTime) ? timeFormated(endTime) : 'N/A'}
+
+time elapsed - ${HMSFormatted(SecondsToHMS(secondsElapsed))}
+time paused - ${HMSFormatted(SecondsToHMS(secondsPaused))}
+
+interval time - ${HMSFormatted(SecondsToHMS(secondsInterval))}
+interval price - ${'£' + pricePerInterval}
+intervals passed - ${intervalsPassed}
+
+total price - ${'£' + totalPrice}${notes && `\n\nnotes: ${notes}`}`
+            });
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error) {
+            console.log('TimerInfoScreen: error sending')
+        }
+    }
+
     // checks if timer started
     const secondsPaused = startTime ?
         (Math.abs(endTime.getTime() - startTime.getTime()) / 1000) - secondsElapsed :
@@ -43,25 +83,34 @@ const TimerInfoScreen = ({ route }) => {
 
     const intervalsPassed = Math.floor(secondsElapsed / secondsInterval);
 
-
     return (
         <SafeAreaView className='px-4'>
             <View className='flex-row items-center'>
-                <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => {
-                        if (fromTimer) {
-                            navigation.navigate('NewTimer')
-                        } else {
-                            navigation.navigate('History')
-
-                        }
-                    }}
-                    className='flex-1'>
-                    <AntDesign name='left' size={25} />
-                </TouchableOpacity>
+                <View className='flex-1 items-start'>
+                    <TouchableOpacity
+                        // className='bg-black'
+                        activeOpacity={0.8}
+                        onPress={() => {
+                            if (fromTimer) {
+                                navigation.navigate('NewTimer')
+                            } else {
+                                navigation.navigate('History')
+                            }
+                        }}>
+                        <AntDesign name='left' size={25} />
+                    </TouchableOpacity>
+                </View>
                 <Text className='text-4xl text-center py-5'>Timer Info</Text>
-                <View className='flex-1'></View>
+                <View className='flex-1 items-end'>
+                    <TouchableOpacity
+                        className='mr-1'
+                        activeOpacity={0.8}
+                        onPress={() => {
+                            shareSession();
+                        }}>
+                        <Feather name={Platform.OS === 'ios' ? 'share' : 'share-2'} size={25} />
+                    </TouchableOpacity>
+                </View>
             </View>
 
             <ListInfo title='timer title' info={title} />

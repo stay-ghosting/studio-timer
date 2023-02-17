@@ -20,7 +20,7 @@ const HistoryListItem = ({ session }) => {
 
     const navigation = useNavigation();
     const onPress = () => {
-        navigation.navigate('timerInfoScreen', session)
+        navigation.navigate('timerInfoScreen', { ...session, fromTimer: false })
     }
     return (
         <TouchableOpacity
