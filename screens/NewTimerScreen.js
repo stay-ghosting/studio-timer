@@ -120,9 +120,9 @@ const NewTimerScreen = () => {
                     onFocus={() => { handleError(null, 'pricePerInterval') }}
                     isMaterialIcon={false}
                     error={errors.pricePerInterval} />
-                <View className='border-t border-slate-300  pt-3'>
-                    <View className={`${intervalError ? 'border-red-500' : ''} border px-3 py-4 bg-slate-200 mt-2`}>
-                        <Text className='text-lg text-slate-600 pb-4'>Interval: {inputs.intervalHours}h{inputs.intervalMinutes}m</Text>
+                <View className=''>
+                    <Text className='text-sm text-slate-600 pt-2 '>Interval: {inputs.intervalHours}h{inputs.intervalMinutes}m</Text>
+                    <View className={`${intervalError ? 'border-red-500 border' : ''} rounded-lg px-3 py-4 bg-slate-200 mt-2`}>
                         <Text className='text-sm text-slate-600 pb-2'>Hours</Text>
                         <Slider
                             style={{ width: '100%', height: 20 }}
@@ -132,7 +132,9 @@ const NewTimerScreen = () => {
                             thumbTintColor='#8B5CF6'
                             minimumTrackTintColor="#8B5CF6"
                             maximumTrackTintColor="#C4B5FD"
+                            tapToSeek
                             onValueChange={(value) => {
+                                Keyboard.dismiss();
                                 setInputs({ ...inputs, intervalHours: value });
                                 setIntervalError('');
                             }} />
@@ -145,7 +147,9 @@ const NewTimerScreen = () => {
                             thumbTintColor='#8B5CF6'
                             minimumTrackTintColor="#8B5CF6"
                             maximumTrackTintColor="#C4B5FD"
+                            tapToSeek
                             onValueChange={(value) => {
+                                Keyboard.dismiss();
                                 setInputs({ ...inputs, intervalMinutes: value });
                                 setIntervalError('');
                             }} />
@@ -158,7 +162,7 @@ const NewTimerScreen = () => {
                 </View>
                 {/* start timer button */}
                 <Button
-                    className='mb-7'
+                    className='mb-5'
                     title='Start Timer'
                     onPress={validate} />
             </SafeAreaView >

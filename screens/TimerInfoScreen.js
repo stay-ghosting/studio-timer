@@ -6,6 +6,7 @@ import { HMSFormatted, SecondsToHMS } from '../components/HMS';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
+import { useEffect } from 'react';
 
 
 const TimerInfoScreen = ({ route }) => {
@@ -30,6 +31,15 @@ const TimerInfoScreen = ({ route }) => {
     console.log('timer screen: ' + JSON.stringify(route.params))
 
     const navigation = useNavigation();
+
+    useEffect(() => {
+        if (fromTimer === true) {
+            navigation.addListener('beforeRemove', (e) => {
+                // Prevent leaving the screen
+                e.preventDefault();
+            })
+        }
+    }, [navigation]);
 
     const dateFormated = (date) =>
         JSON.stringify(date).replace('"', '').split('T')[0].split('-').slice(0, 3).join('/');
