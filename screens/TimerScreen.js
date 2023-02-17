@@ -91,12 +91,13 @@ const TimerScreen = ({ route }) => {
 
 
     const showConfirmFinish = () => {
-        const details = {
-            timeElapsedHMS: timeElapsedHMS,
-            currentPrice: currentPrice,
-        }
+        // const details = {
+        //     timeElapsedHMS: timeElapsedHMS,
+        //     currentPrice: currentPrice,
+        // }
 
         const endTime = new Date().toJSON();
+
         const session = {
             startDate: startDate,
             startTime: startTime,
@@ -110,6 +111,7 @@ const TimerScreen = ({ route }) => {
         };
 
         const onPress = () => {
+
             addSession(session);
             navigation.navigate('menuScreen');
         }

@@ -8,7 +8,7 @@ const HistoryScreen = () => {
     const [sessions, addSession, resetSessions] = useSessions();
 
     useEffect(() => {
-        console.log("history loading: " + sessions);
+        console.log("history loading: " + JSON.stringify(sessions));
     }, [sessions])
 
     return (
