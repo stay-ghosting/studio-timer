@@ -52,6 +52,13 @@ const TimerScreen = ({ route }) => {
     }, [])
 
     useEffect(() => {
+        navigation.addListener('beforeRemove', (e) => {
+            // Prevent leaving the screen
+            e.preventDefault();
+        })
+    }, [navigation]);
+
+    useEffect(() => {
         if (isSetUp) {
             // if paused
             if (isPaused) {
@@ -113,7 +120,9 @@ const TimerScreen = ({ route }) => {
         const onPress = () => {
 
             addSession(session);
-            navigation.navigate('menuScreen');
+            navigation.navigate('timerInfoScreen', session);
+
+            // navigation.navigate('menuScreen');
         }
 
         return Alert.alert(

@@ -52,7 +52,7 @@ export const SessionsProvider = ({ children }) => {
             return null;
         }
         // add new session to sessions object
-        localSessions.push(newSession)
+        localSessions.unshift(newSession)
         // try update local sessions
         try {
             await AsyncStorage.setItem('sessions', JSON.stringify(localSessions));
@@ -123,6 +123,7 @@ export const SessionsProvider = ({ children }) => {
         // return array
         return sessionsObj;
     }
+
     return (
         <SessionsContext.Provider value={[sessions, addSession, resetSessions]}>
             {children}
