@@ -108,6 +108,42 @@ export const SessionsProvider = ({ children }) => {
     }
 
 
+    /** update value in a session in local storage and set state
+ * @param sessions index of item to remove */
+    const updateSession = async (index, key, value) => {
+        // gets session object
+        let localSessions = await getSessions();
+        // if reading errorr, return null
+        if (localSessions === null) {
+            console.log('LocalStorage, updateSession: couldnt get data');
+            // set state to match local storage
+            setSessions(null);
+            return null;
+        }
+        // update session from sessions object
+        localSessions[index][key] = value;
+        // try update local sessions
+        try {
+            await AsyncStorage.setItem('sessions', JSON.stringify(localSessions));
+        } catch (e) {
+            console.log('LocalStorage, addSession: staving error');
+            // match state to local storage
+            setSessions(localSessions);
+            return null;
+        }
+        setLoading(true);
+        // set sessions state
+        setSessions(_ => localSessions);
+        setLoading(false);
+
+        // log
+        console.log("session updated in storage: " + JSON.stringify(localSessions[index]))
+        // return the updated session array
+        return localSessions;
+    }
+
+
+
     /** sets sessions to empty array in local storage and set state
      * @returns null if failed sessions array if sucsessfull
     */
@@ -159,7 +195,7 @@ export const SessionsProvider = ({ children }) => {
     }
 
     return (
-        <SessionsContext.Provider value={[sessions, addSession, resetSessions, removeSession]}>
+        <SessionsContext.Provider value={[sessions, addSession, resetSessions, removeSession, updateSession]}>
             {children}
         </SessionsContext.Provider>
     )

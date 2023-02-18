@@ -26,7 +26,7 @@ const HistoryListItem = ({ session, index }) => {
     const navigation = useNavigation();
 
     const onPress = () => {
-        navigation.navigate('timerInfoScreen', { ...session, fromTimer: false })
+        navigation.navigate('timerInfoScreen', { ...session, fromTimer: false, index, })
     }
 
     return (
@@ -42,6 +42,7 @@ const HistoryListItem = ({ session, index }) => {
             </TouchableOpacity >
             <TouchableOpacity
                 activeOpacity={0.8}
+                className='p-2'
                 onPress={() => removeSession(index)}>
                 <Feather name='trash' size={20} />
             </TouchableOpacity>

@@ -19,7 +19,7 @@ const Input = ({
         <TouchableOpacity
             activeOpacity={1}
             onPress={() => { inputComponent.current.focus() }}>
-            <Text className='text-sm text-slate-600 py-2'>{label}</Text>
+            <Text className='text-sm text-slate-800 py-2'>{label}</Text>
             <View className={`h-14 flex-row px-4  rounded-lg items-center space-x-2 bg-slate-200
                             ${error && 'border border-red-500'} 
                             ${isFocused && 'border border-slate-400'}`}>
