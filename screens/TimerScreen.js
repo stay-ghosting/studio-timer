@@ -11,7 +11,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 
 
 const TimerScreen = ({ route }) => {
-    const { pricePerInterval, intervalHMS, sessionName } = route.params;
+    const { pricePerInterval, intervalHMS, sessionName, isRounded, roundPercent } = route.params;
 
     const navigation = useNavigation();
 
@@ -24,11 +24,16 @@ const TimerScreen = ({ route }) => {
     const [seconds, setSeconds] = useState(0);
     const timeElapsedHMS = SecondsToHMS(seconds);
 
-
     // seconds passed / seconds in an interval
     const intervalsPassed = Math.floor(HMSToSeconds(timeElapsedHMS) / HMSToSeconds(intervalHMS));
+    const secondsIntoInterval = seconds % HMSToSeconds(intervalHMS);
+    const percentToNextInterval = (secondsIntoInterval / HMSToSeconds(intervalHMS)) * 100;
+    if (percentToNextInterval > roundPercent) {
+        var currentPrice = (intervalsPassed * pricePerInterval) + pricePerInterval;
+    } else {
+        var currentPrice = (intervalsPassed * pricePerInterval);
+    }
 
-    const currentPrice = intervalsPassed * pricePerInterval;
 
     const progressToInteraval = (seconds - (intervalsPassed * HMSToSeconds(intervalHMS))) / HMSToSeconds(intervalHMS)
 
@@ -111,8 +116,6 @@ const TimerScreen = ({ route }) => {
             `
 Are you sure you want to end the timer?
 All progress will be lost!`,
-
-
             [
                 {
                     text: "No",
@@ -140,6 +143,7 @@ All progress will be lost!`,
             pricePerInterval: pricePerInterval,
             notes: "",
             fromTimer: true,
+            index: 0,
         };
 
         const confirm = () => {
@@ -199,7 +203,7 @@ Are you sure you want to end the timer?`,
 
                 <TouchableOpacity
                     activeOpacity={0.8}
-                    className='py-4 items-center'
+                    className='py-4 items-center bg-slate-200 p-4 rounded-lg border border-violet-500'
                     onPress={() => {
                         if (isSetUp) {
                             setIsPaused(!isPaused)
@@ -207,7 +211,7 @@ Are you sure you want to end the timer?`,
                             navigation.navigate('NewTimer')
                         }
                     }}>
-                    {isSetUp && <Text className='pb-4 text-lg'>Current Price £{currentPrice}</Text>}
+                    {isSetUp && <Text className='pb-4 text-lg text-slate-600'>Current Price £{currentPrice}</Text>}
                     {/* time */}
                     <Text className='text-6xl text-violet-500 font-bold '>
                         {`${timeElapsedHMS.h.toString().padStart(2, '0')}:${timeElapsedHMS.m.toString().padStart(2, '0')}:${timeElapsedHMS.s.toString().padStart(2, '0')}`}
@@ -216,7 +220,7 @@ Are you sure you want to end the timer?`,
                     {isSetUp && <Progress.Bar progress={progressToInteraval} width={200} color='#8B5CF6' />}
                     {
                         isSetUp ?
-                            <Text>tap to {isPaused ? (hasBeenRan ? 'resume' : 'start') : ('pause')}</Text> :
+                            <Text className='text-lg font-bold text-violet-500'>Tap To {isPaused ? (hasBeenRan ? 'Resume' : 'Start') : ('Pause')}</Text> :
                             <Text>tap to set up timer</Text>
                     }
                 </TouchableOpacity>
@@ -225,10 +229,6 @@ Are you sure you want to end the timer?`,
                 {isSetUp &&
                     <View className='flex-row space-x-2'>
                         {/* done button */}
-                        {/* <Button
-                            title='Exit timer'
-                            className='px-4 py-2 mb-10'
-                            onPress={() => { showConfirmCancel() }} /> */}
                         <Button
                             title='Finish Session'
                             className='px-4 py-2 mb-10'
