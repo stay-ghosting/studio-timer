@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TimerScreen from './screens/TimerScreen';
-import { SecondsToHMS } from './components/HMS';
+import { SecondsToHMS } from './utils/HMS';
 import MenuScreen from './screens/MenuScreen';
 import { SessionsProvider } from './components/SessionsProvider';
 import TimerInfoScreen from './screens/TimerInfoScreen';

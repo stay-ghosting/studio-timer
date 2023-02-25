@@ -8,7 +8,7 @@ import Slider from '@react-native-community/slider';
 import DismissKeyboardView from '../components/DismissKeyboardView'
 import CheckBox from '../components/CheckBox'
 import { ScrollView } from 'react-native'
-import { HMSToSeconds, SecondsToHMS, HMSFormatted } from '../components/HMS'
+import { HMSToSeconds, SecondsToHMS, HMSFormatted } from '../utils/HMS'
 
 const NewTimerScreen = () => {
     const navigation = useNavigation();

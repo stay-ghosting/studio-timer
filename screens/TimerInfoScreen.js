@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Share, Platform, TextInput, ScrollView, A
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Hr from '../components/Hr';
-import { HMSFormatted, SecondsToHMS } from '../components/HMS';
+import { HMSFormatted, SecondsToHMS } from '../utils/HMS';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
