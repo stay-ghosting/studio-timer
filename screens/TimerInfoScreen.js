@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useSessions } from '../components/SessionsProvider';
 import DismissKeyboardView from '../components/DismissKeyboardView';
-import Button from '../components/Button';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 
 const TimerInfoScreen = ({ route }) => {
@@ -136,7 +136,10 @@ From Studio Timer`
                 </View>
             </View>
             {/* details */}
-            <ScrollView className='px-4'>
+            <KeyboardAwareScrollView
+                extraScrollHeight={70}
+                keyboardOpeningTime={0}
+                className='px-4'>
                 <ListInfo title='Timer title' info={title} />
                 <Text />
                 <Hr />
@@ -166,20 +169,18 @@ From Studio Timer`
                 <ListInfo title='Total price' info={'£' + totalPrice} />
                 <Text />
                 <Text>Notes:</Text>
-                <DismissKeyboardView >
-                    <TextInput
-                        className='bg-slate-200 rounded-lg mt-2 p-4'
-                        multiline={true}
-                        numberOfLines={newNotes.split('\n').length}
-                        onChangeText={(value) => {
-                            setLoading(true);
-                            setNewNotes(value);
-                            setLoading(false);
-                            updateSession(index, 'notes', newNotes);
-                        }}
-                        value={newNotes} />
-                </DismissKeyboardView>
-            </ScrollView>
+                <TextInput
+                    className='bg-slate-200 rounded-lg mt-2 p-4'
+                    multiline={true}
+                    numberOfLines={newNotes.split('\n').length}
+                    onChangeText={(value) => {
+                        setLoading(true);
+                        setNewNotes(value);
+                        setLoading(false);
+                        updateSession(index, 'notes', newNotes);
+                    }}
+                    value={newNotes} />
+            </KeyboardAwareScrollView>
         </SafeAreaView >
     )
 }

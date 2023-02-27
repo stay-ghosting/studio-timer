@@ -203,7 +203,7 @@ const NewTimerScreen = () => {
             {/* start timer button */}
             <DismissKeyboardView>
                 <Button
-                    className='mb-5'
+                    className='my-2'
                     title='Start Timer'
                     onPress={validate} />
             </DismissKeyboardView>

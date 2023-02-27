@@ -51,7 +51,7 @@ All sessions will be permanently deleted.`,
 
                 }
             </ScrollView>
-            <Button title='Clear History' onPress={onClearHistory} className='mb-5' />
+            <Button title='Clear History' onPress={onClearHistory} className='my-2' />
         </SafeAreaView >
     )
 }
