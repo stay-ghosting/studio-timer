@@ -12,6 +12,7 @@ const Input = ({
     onFocus = () => { },
     ...props
 }) => {
+    // true if input selected
     const [isFocused, setIsFocused] = useState(false);
     const inputComponent = useRef(null);
 

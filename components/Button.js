@@ -6,7 +6,7 @@ const Button = ({ title, onPress = () => { }, ...props }) => {
         <TouchableOpacity
             {...props}
             activeOpacity={0.8}
-            className='bg-violet-500 items-center py-5 rounded-lg'
+            className='bg-violet-500 items-center w-40 m-auto py-4 rounded-lg'
             onPress={onPress}>
             <Text
                 className='text-white font-bold'>

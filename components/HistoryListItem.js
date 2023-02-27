@@ -1,6 +1,5 @@
 import { View, Text, TouchableOpacity, Alert } from 'react-native'
 import React from 'react';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 import { useSessions } from './SessionsProvider';
 import Feather from 'react-native-vector-icons/Feather';
@@ -19,12 +18,12 @@ const HistoryListItem = ({ session, index }) => {
     } = session
 
     const [sessions, addSession, resetSessions, removeSession] = useSessions();
-
-    // console.log("item session:" + JSON.stringify(session))
-    const dateFormated = startDate.toString().split('T')[0].split('-').slice(0, 3).join('/');
-
     const navigation = useNavigation();
 
+    // eg '2023/02/27'
+    const dateFormated = startDate.toString().split('T')[0].split('-').slice(0, 3).join('/');
+
+    /** navigates to timer info screen and passes session info */
     const onPress = () => {
         navigation.navigate('timerInfoScreen', { ...session, fromTimer: false, index, })
     }

@@ -4,7 +4,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSessions } from '../components/SessionsProvider';
 import HistoryListItem from '../components/HistoryListItem';
 import Button from '../components/Button';
-import { TouchableOpacity } from 'react-native';
 
 const HistoryScreen = () => {
     const [sessions, addSession, resetSessions] = useSessions();
@@ -32,7 +31,7 @@ All sessions will be permanently deleted.`,
     }
 
     return (
-        <SafeAreaView className='px-14 flex-1'>
+        <SafeAreaView className='px-4 flex-1'>
             <Text className='text-4xl text-center py-5'>History</Text>
 
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -45,7 +44,6 @@ All sessions will be permanently deleted.`,
                         </View>
                         :
                         sessions.map((session, index) => {
-                            console.log(index);
                             return <HistoryListItem session={session} index={index} key={index} />
                         })
                     :
@@ -54,8 +52,6 @@ All sessions will be permanently deleted.`,
                 }
             </ScrollView>
             <Button title='Clear History' onPress={onClearHistory} className='mb-5' />
-
-
         </SafeAreaView >
     )
 }

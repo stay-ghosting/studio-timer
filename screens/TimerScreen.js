@@ -148,8 +148,6 @@ All progress will be lost!`,
         const confirm = () => {
             addSession(session);
             navigation.navigate('timerInfoScreen', session);
-
-            // navigation.navigate('menuScreen');
         }
 
 
@@ -179,7 +177,7 @@ Are you sure you want to end the timer?`,
 
 
     return (
-        <SafeAreaView style={AndroidSafeView.AndroidSafeArea} className='flex-1 px-5 items-center'>
+        <SafeAreaView className='flex-1 px-5 items-center'>
             <View className='flex-1 items-center' >
                 {/* session name */}
                 {isSetUp &&

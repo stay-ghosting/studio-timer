@@ -8,6 +8,7 @@ import TimerInfoScreen from './screens/TimerInfoScreen';
 //git push -u origin master
 // give the option to reset data if not working in local storage
 // create a validation function to make sure local sessions is in the correct form
+// ad percent to rounding
 
 export default function App() {
 
