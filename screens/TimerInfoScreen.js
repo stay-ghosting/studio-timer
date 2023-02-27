@@ -9,6 +9,8 @@ import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useSessions } from '../components/SessionsProvider';
+import DismissKeyboardView from '../components/DismissKeyboardView';
+import Button from '../components/Button';
 
 
 const TimerInfoScreen = ({ route }) => {
@@ -108,7 +110,7 @@ From Studio Timer`
     const intervalsPassed = Math.floor(secondsElapsed / secondsInterval);
 
     return (
-        <SafeAreaView className='px-4'>
+        <SafeAreaView className='flex-1 px-4'>
             <View className='flex-row items-center'>
                 <View className='flex-1 items-start'>
                     <TouchableOpacity
@@ -133,6 +135,7 @@ From Studio Timer`
                     </TouchableOpacity>
                 </View>
             </View>
+            {/* details */}
             <ScrollView className='px-4'>
                 <ListInfo title='Timer title' info={title} />
                 <Text />
@@ -163,23 +166,20 @@ From Studio Timer`
                 <ListInfo title='Total price' info={'£' + totalPrice} />
                 <Text />
                 <Text>Notes:</Text>
-                <TextInput
-                    className='bg-slate-200 rounded-lg mt-2 p-4'
-                    multiline={true}
-                    numberOfLines={6}
-                    onChangeText={(value) => {
-                        setLoading(true);
-                        setNewNotes(value);
-                        setLoading(false);
-                        updateSession(index, 'notes', newNotes);
-                    }}
-                    value={newNotes} />
-                <View className='h-96' />
-                <View className='h-96' />
+                <DismissKeyboardView >
+                    <TextInput
+                        className='bg-slate-200 rounded-lg mt-2 p-4'
+                        multiline={true}
+                        numberOfLines={newNotes.split('\n').length}
+                        onChangeText={(value) => {
+                            setLoading(true);
+                            setNewNotes(value);
+                            setLoading(false);
+                            updateSession(index, 'notes', newNotes);
+                        }}
+                        value={newNotes} />
+                </DismissKeyboardView>
             </ScrollView>
-
-
-
         </SafeAreaView >
     )
 }

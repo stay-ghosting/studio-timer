@@ -4,7 +4,7 @@ import React from 'react'
 const DismissKeyboardView = ({ children }) => (
     <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className='flex-1'>
+        className=''>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             {children}
         </TouchableWithoutFeedback>
