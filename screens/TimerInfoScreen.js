@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Share, Platform, TextInput, ScrollView, A
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Hr from '../components/Hr';
-import { HMSFormatted, SecondsToHMS } from '../components/HMS';
+import { HMSFormatted, SecondsToHMS } from '../utils/HMS';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
@@ -25,26 +25,30 @@ const TimerInfoScreen = ({ route }) => {
         fromTimer,
         index,
     } = route.params;
+    const navigation = useNavigation();
 
+    // the time the timer was created
     startDate = new Date(startDate);
+    // the time te timer was first started
     startTime = startTime ? new Date(startTime) : null;
+    // the time the timer was ended
     endTime = new Date(endTime);
 
-
-    console.log('timer screen: ' + JSON.stringify(route.params))
-
-    const navigation = useNavigation();
+    // the notes at the bottom of the screen
     const [newNotes, setNewNotes] = useState(notes);
+    // used to refresh the ui
     const [loading, setLoading] = useState(false);
 
+    // allows access and modifaction of sessions 
     const [sessions, addSession, resetSessions, removeSession, updateSession] = useSessions();
 
+    /** @returns formated date from a Date object */
     const dateFormated = (date) =>
         JSON.stringify(date).replace('"', '').split('T')[0].split('-').slice(0, 3).join('/');
-
+    /** @returns formated date from a Date object */
     const timeFormated = (date) =>
         JSON.stringify(date).split('T')[1].split('.')[0].split(':').slice(0, 3).join(':');
-
+    /** allows sharing of the session data */
     const shareSession = async () => {
         try {
             const result = await Share.share({
@@ -86,6 +90,7 @@ From Studio Timer`
         }
     }
 
+    //** navigates back to new timer or history page */
     const goBack = () => {
         if (fromTimer) {
             navigation.navigate('NewTimer')
@@ -99,6 +104,7 @@ From Studio Timer`
         (Math.abs(endTime.getTime() - startTime.getTime()) / 1000) - secondsElapsed :
         0;
 
+    // the amount of intervals passed
     const intervalsPassed = Math.floor(secondsElapsed / secondsInterval);
 
     return (

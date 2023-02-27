@@ -24,6 +24,7 @@ export const SessionsProvider = ({ children }) => {
                 await resetSessions()
                 console.log('SessionsProvider DEBUG: reseting sessions memory')
             }
+            // inits sessions
             await getSessions();
         })()
     }, [])

@@ -1,4 +1,4 @@
-import { View, Text, Keyboard } from 'react-native'
+import { View, Text, Keyboard, TextInput } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Input from '../components/Input'
@@ -8,7 +8,7 @@ import Slider from '@react-native-community/slider';
 import DismissKeyboardView from '../components/DismissKeyboardView'
 import CheckBox from '../components/CheckBox'
 import { ScrollView } from 'react-native'
-import { HMSToSeconds, SecondsToHMS, HMSFormatted } from '../components/HMS'
+import { HMSToSeconds, SecondsToHMS, HMSFormatted } from '../utils/HMS'
 
 const NewTimerScreen = () => {
     const navigation = useNavigation();
@@ -41,7 +41,6 @@ const NewTimerScreen = () => {
         }
         else {
             const alphaNumeric = /^[\w\s]+$/;
-            console.log(inputs.sessionName);
 
             if (!alphaNumeric.test(inputs.sessionName)) {
                 handleError('session name can only contain numbers leters and underscores', 'sessionName');
@@ -56,7 +55,6 @@ const NewTimerScreen = () => {
             isValid = false;
         }
         else {
-            // console.log(inputs.pricePerInterval);
             const isFloat = /^\d*(\.\d+)?$/;
             // if not a correct float ...
             if (!(isFloat.test(inputs.pricePerInterval.trim()))) {
@@ -110,10 +108,10 @@ const NewTimerScreen = () => {
     }
     return (
         <DismissKeyboardView>
-            <SafeAreaView className='px-14 flex-1'>
+            <SafeAreaView className='flex-1 px-4'>
                 {/* title */}
                 <Text className='text-4xl text-center py-5'>New Timer</Text>
-                <ScrollView>
+                <ScrollView className='flex-1'>
                     {/* session name */}
                     <Input
                         onChangeText={(text) => { handleOnChange(text, 'sessionName') }}
@@ -173,8 +171,9 @@ const NewTimerScreen = () => {
                                 onValueChanged={(value) => setInputs({ ...inputs, isRounded: value })} />
 
                             {
-                                inputs.isRounded && <View className='rounded-lg mt-2 space-y-3'>
-                                    <Text className={`text-sm h-16 text-slate-800`}>
+                                inputs.isRounded &&
+                                <View className='rounded-lg mt-2 space-y-2'>
+                                    <Text className={`text-sm text-slate-800`}>
                                         Round up after {StringHMSRoundTo}
                                     </Text>
                                     <Slider
@@ -197,13 +196,10 @@ const NewTimerScreen = () => {
 
                         {/* rounded */}
 
-
-                        <View className='h-52' />
-
                     </View>
-                </ScrollView>
 
-                <View className='flex-1 justify-end'></View>
+                    <View className='flex-1 justify-end'></View>
+                </ ScrollView>
                 {/* start timer button */}
                 <Button
                     className='mb-5'
