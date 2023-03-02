@@ -3,8 +3,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TimerScreen from './screens/TimerScreen';
 import { SecondsToHMS } from './utils/HMS';
 import MenuScreen from './screens/MenuScreen';
-import { SessionsProvider } from './components/SessionsProvider';
+import { SessionsProvider, useSessions } from './components/SessionsProvider';
 import TimerInfoScreen from './screens/TimerInfoScreen';
+import { useEffect } from 'react';
 //git push -u origin master
 // give the option to reset data if not working in local storage
 // create a validation function to make sure local sessions is in the correct form
@@ -13,6 +14,9 @@ import TimerInfoScreen from './screens/TimerInfoScreen';
 export default function App() {
 
   const Stack = createNativeStackNavigator();
+
+
+
 
   return (
     <SessionsProvider>

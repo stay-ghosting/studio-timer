@@ -14,6 +14,8 @@ const TimerScreen = ({ route }) => {
 
     const navigation = useNavigation();
 
+    const DEBUG_FAST_MODE = false;
+
     const [sessions, addSession, resetSessions] = useSessions();
     const [hasBeenRan, setHasBeenRan] = useState(false);
     const [startTime, setStartTime] = useState(null);
@@ -81,7 +83,12 @@ const TimerScreen = ({ route }) => {
                     setIsRunning(() => true);
                     // set interval
                     interval = setInterval(() => {
-                        setSeconds(seconds => seconds + 1);
+                        if (DEBUG_FAST_MODE) {
+                            setSeconds(seconds => seconds + 1241);
+                        } else {
+                            setSeconds(seconds => seconds + 1);
+
+                        }
                     }, 1000);
                 }
             }

@@ -13,22 +13,50 @@ export function useSessions() {
 
 export const SessionsProvider = ({ children }) => {
     const DEBUG_RESET_MEMORY = false;
-
+    const DEBUG_SAMPLE_DATA = false;
 
     const [sessions, setSessions] = useState(null);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         (async () => {
+            // resets the memory
             if (DEBUG_RESET_MEMORY) {
                 await resetSessions()
                 console.log('SessionsProvider DEBUG: reseting sessions memory')
             }
+
+            // clears memory and add sample data
+            if (DEBUG_SAMPLE_DATA) {
+                const session = {
+                    startDate: new Date(),
+                    startTime: new Date(),
+                    endTime: new Date(),
+                    title: '',
+                    secondsElapsed: 1,
+                    secondsInterval: 1,
+                    totalPrice: 1,
+                    pricePerInterval: 1,
+                    notes: '',
+                }
+                await resetSessions()
+                await addSession({ ...session, title: 'Andrew Vocal Recording' })
+                await addSession({ ...session, title: 'Sam Private Tutoring' })
+                await addSession({ ...session, title: 'Joe Billable Hours' })
+                await addSession({ ...session, title: 'Hanna Baby Sitting Time' })
+                await addSession({ ...session, title: 'Steve Therapy Session' })
+                // await addSession({ ...session, title: '' })
+                // await addSession({ ...session, title: '' })
+                // await addSession({ ...session, title: '' })
+                // await addSession({ ...session, title: '' })
+                // await addSession({ ...session, title: '' })
+
+            }
+
             // inits sessions
             await getSessions();
         })()
     }, [])
-
 
     /** add session to local storage and set state
      * @returns sessions array */

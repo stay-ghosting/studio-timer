@@ -67,13 +67,11 @@ Timer start time - ${(startTime) ? timeFormated(startTime) : 'not started'}
 Timer end date - ${(endTime) ? dateFormated(endTime) : 'N/A'}
 Timer end time - ${(endTime) ? timeFormated(endTime) : 'N/A'}
 
-Time elapsed - ${HMSFormatted(SecondsToHMS(secondsElapsed))}
-Time paused - ${HMSFormatted(SecondsToHMS(secondsPaused))}
-
 Interval time - ${HMSFormatted(SecondsToHMS(secondsInterval))}
 Interval price - ${'£' + pricePerInterval}
 Intervals passed - ${intervalsPassed}
 
+Time elapsed - ${HMSFormatted(SecondsToHMS(secondsElapsed))}
 Total price - ${'£' + totalPrice}${notes && `\n\nnotes:\n${newNotes}`}
 
 From Studio Timer`
@@ -141,7 +139,6 @@ From Studio Timer`
                 keyboardOpeningTime={0}
                 className='px-4'>
                 <ListInfo title='Timer title' info={title} />
-                <Text />
                 <Hr />
                 <Text />
                 <ListInfo title='Setup date' info={dateFormated(startDate)} />
@@ -152,20 +149,15 @@ From Studio Timer`
                 <Text />
                 <ListInfo title='Timer end date' info={(endTime) ? dateFormated(endTime) : 'N/A'} />
                 <ListInfo title='Timer end time' info={(endTime) ? timeFormated(endTime) : 'N/A'} />
-                <Text />
-                <Hr />
-                <Text />
-                <ListInfo title='Time elapsed' info={HMSFormatted(SecondsToHMS(secondsElapsed))} />
-                <ListInfo title='Time paused' info={HMSFormatted(SecondsToHMS(secondsPaused))} />
-                <Text />
+                {/* <ListInfo title='Time paused' info={HMSFormatted(SecondsToHMS(secondsPaused))} /> */}
                 <Hr />
                 <Text />
                 <ListInfo title='Interval time' info={HMSFormatted(SecondsToHMS(secondsInterval))} />
                 <ListInfo title='Interval price' info={'£' + pricePerInterval} />
                 <ListInfo title='Intervals passed' info={intervalsPassed} />
-                <Text />
                 <Hr />
                 <Text />
+                <ListInfo title='Time elapsed' info={HMSFormatted(SecondsToHMS(secondsElapsed))} />
                 <ListInfo title='Total price' info={'£' + totalPrice} />
                 <Text />
                 <Text>Notes:</Text>
@@ -187,7 +179,7 @@ From Studio Timer`
 
 const ListInfo = ({ title, info }) => {
     return (
-        <View className='flex-row justify-between'>
+        <View className='flex-row pb-2 justify-between'>
             <Text>{title}</Text>
             <Text>{info}</Text>
         </View>

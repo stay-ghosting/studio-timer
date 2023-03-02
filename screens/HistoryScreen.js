@@ -7,7 +7,6 @@ import Button from '../components/Button';
 
 const HistoryScreen = () => {
     const [sessions, addSession, resetSessions] = useSessions();
-    const DEBUG = true;
 
     useEffect(() => {
         console.log("history loading: " + JSON.stringify(sessions));
