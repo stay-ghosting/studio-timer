@@ -13,7 +13,7 @@ export function useSessions() {
 
 export const SessionsProvider = ({ children }) => {
     const DEBUG_RESET_MEMORY = false;
-    const DEBUG_SAMPLE_DATA = false;
+    const DEBUG_SAMPLE_DATA = true;
 
     const [sessions, setSessions] = useState(null);
     const [loading, setLoading] = useState(false);
